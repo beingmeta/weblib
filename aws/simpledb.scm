@@ -15,7 +15,7 @@
 (module-export! '{sdb/domains sdb/domains/new
 		  sdb/domain/info sdb/domain/drop!})
 
-(use-module '{aws webtools texttools logger webtools varconfig io/jsonout kno/rulesets})
+(use-module '{aws webtools texttools logger webtools varconfig json/export kno/rulesets})
 
 (define-init %loglevel %notice%)
 

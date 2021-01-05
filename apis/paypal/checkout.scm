@@ -4,7 +4,7 @@
 
 ;;; Connects with Paypal
 
-(use-module '{webtools xhtml texttools io/jsonout ezrecords net/oauth
+(use-module '{webtools xhtml texttools json/export ezrecords net/oauth
 	      text/parsetime varconfig logger opts})
 (use-module 'apis/paypal)
 

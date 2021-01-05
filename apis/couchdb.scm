@@ -3,7 +3,7 @@
 
 (in-module 'apis/couchdb)
 
-(use-module '{webtools ezrecords sqldb/oids io/jsonout})
+(use-module '{webtools ezrecords sqldb/oids json/export})
 (use-module '{texttools logger})
 
 (define-init %loglevel %notice%)

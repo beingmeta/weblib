@@ -3,7 +3,7 @@
 
 (in-module 'hostinfo)
 
-(use-module '{webtools io/jsonout})
+(use-module '{webtools json/export})
 
 (module-export! '{hostinfo/json hostinfo/field hostinfo})
 
