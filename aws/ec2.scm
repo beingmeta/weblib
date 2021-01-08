@@ -7,7 +7,7 @@
 (define %loglevel %notify%)
 
 (use-module '{webtools texttools net/mimetable regex 
-	      findpath gpath varconfig})
+	      os/findpath gpath varconfig})
 (use-module '{aws aws/v4})
 
 ;; Don't issue warnings for these packages when being persnickety

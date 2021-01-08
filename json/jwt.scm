@@ -3,7 +3,7 @@
 
 (in-module 'json/jwt)
 
-(use-module '{ezrecords webtools texttools jsonout crypto packetfns})
+(use-module '{ezrecords webtools texttools json/export crypto kno/packetfns})
 (use-module '{varconfig logger})
 (define %used_modules 'varconfig)
 

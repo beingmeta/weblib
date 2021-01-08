@@ -4,8 +4,8 @@
 (in-module 'aws/ec2data)
 
 (use-module '{aws aws/v4 webtools texttools net/mimetable regex logctl
-	      ezrecords rulesets logger varconfig})
-(define %used_modules '{aws varconfig ezrecords rulesets})
+	      ezrecords kno/rulesets logger varconfig})
+(define %used_modules '{aws varconfig ezrecords kno/rulesets})
 
 (define %loglevel %warn%)
 

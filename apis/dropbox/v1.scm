@@ -4,7 +4,7 @@
 ;;; Core file for accessing Dropbox
 (in-module 'apis/dropbox/v1)
 
-(use-module '{webtools xhtml signature oauth varconfig
+(use-module '{webtools xhtml crypto/signature net/oauth varconfig
 	      gpath texttools net/mimetable ezrecords
 	      logger})
 

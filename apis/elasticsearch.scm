@@ -2,7 +2,7 @@
 
 (in-module 'apis/elasticsearch)
 
-(use-module '{webtools logger texttools jsonout varconfig})
+(use-module '{webtools logger texttools json/export varconfig})
 
 (module-export! '{req->json 
 		  elastic/new elastic/upload elastic/delete

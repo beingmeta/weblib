@@ -6,7 +6,7 @@
 
 (module-export! '{sig/make sig/check})
 
-(define sigmod (get-module 'signature))
+(define sigmod (get-module 'crypto/signature))
 
 (define sig/make (get sigmod 'sig/make))
 (define sig/check (get sigmod 'sig/check))

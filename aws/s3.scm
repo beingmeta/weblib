@@ -6,7 +6,7 @@
 (use-module '{aws aws/v4 webtools texttools net/mimetable regex logctl
 	      ezrecords kno/rulesets logger varconfig kno/meltcache
 	      curlcache kno/mttools})
-(define %used_modules '{aws varconfig ezrecords rulesets})
+(define %used_modules '{aws varconfig ezrecords kno/rulesets})
 
 (module-export!
  '{s3loc? s3loc-path s3loc-bucket make-s3loc  s3/mkpath
@@ -25,7 +25,7 @@
 		  s3/put s3/write! s3/delete! s3/copy s3/copy!
 		  s3/link! s3/metadata!
 		  s3/copy*! s3/axe! s3/push!
-		  s3/download!
+		  s3/download!	
 		  s3/bucket?})
 (module-export! '{s3/signature s3/op s3/expected
 		  s3/uri s3/signeduri s3/pathuri s3/hosturi})

@@ -4,7 +4,7 @@
 (in-module 'xhtml/buglog)
 
 (use-module '{webtools xhtml xhtml/tableout texttools})
-(use-module '{varconfig stringfmts logger rulesets crypto getcontent ezrecords})
+(use-module '{varconfig stringfmts logger kno/rulesets crypto getcontent ezrecords})
 (module-export! 'buglog)
 
 (define-init %loglevel %notify!)

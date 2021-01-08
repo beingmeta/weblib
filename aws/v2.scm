@@ -5,7 +5,7 @@
 
 ;;; Accessing Amazon Simple DB
 
-(use-module '{aws webtools texttools logger webtools varconfig jsonout rulesets})
+(use-module '{aws webtools texttools logger webtools varconfig json/export kno/rulesets})
 
 (define-init %loglevel %notice%)
 

@@ -3,7 +3,7 @@
 
 (in-module 'json/auth)
 
-(use-module '{webtools texttools jwt})
+(use-module '{webtools texttools json/jwt})
 (use-module '{varconfig logger crypto ezrecords})
 (define %used_modules '{varconfig ezrecords})
 
@@ -17,7 +17,7 @@
 
 (module-export! '{jwt/refresh jwt/refreshed})
 
-(define handle-jwt-args (within-module 'jwt handle-jwt-args))
+(define handle-jwt-args (within-module 'json/jwt handle-jwt-args))
 
 ;;;; Constant and configurable variables
 
