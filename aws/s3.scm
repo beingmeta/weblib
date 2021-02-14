@@ -20,8 +20,7 @@
 		  s3/list s3/list+
 		  s3/content s3/put s3/link!
 		  s3/metadata!})
-(module-export! '{s3/get s3/get+ s3/head s3/ctype s3/exists?
-		  s3/modtime s3/etag s3/info
+(module-export! '{s3/get s3/get+ s3/head s3/ctype
 		  s3/put s3/write! s3/delete! s3/copy s3/copy!
 		  s3/link! s3/metadata!
 		  s3/copy*! s3/axe! s3/push!
@@ -544,34 +543,35 @@
 
 ;;; Basic S3LOC network methods
 
-(define (s3/get loc (headers) (opts))
+(define (s3/get loc (opts #f) (headers))
   (when (string? loc) (set! loc (->s3loc loc)))
-  (default! headers (try (get (s3loc/opts loc) 'headers) '()))
-  (default! opts
-    (if (exists? (get (s3loc/opts loc) 'errs))
-	#[errs #t]
-	s3opts))
-  (when (not (table? opts)) (set! opts `#[errs ,opts]))
+  (set! opts (opt+ opts (s3loc/opts loc)))
+  (default! headers (try (get opts 'headers) '()))
   (if head-cache
       (let ((req (s3/op "GET" (s3loc-bucket loc) (s3loc-path loc)
 		   opts "" "text" headers)))
 	(let ((copy (deep-copy req)))
 	  (drop! copy '%content)
-	  (meltcache/store head-cache copy s3head (list loc headers)))
+	  (meltcache/store head-cache copy s3head (list loc opts headers)))
 	req)
       (s3/op "GET" (s3loc-bucket loc) (s3loc-path loc) opts
 	     "" "text" headers)))
 
-(define (s3/head loc (headers))
+(define (s3/head loc (opts #f) (headers))
   (when (string? loc) (set! loc (->s3loc loc)))
-  (default! headers (try (get (s3loc/opts loc) 'headers) '()))
+  (set! opts (opt+ opts (s3loc/opts loc)))
+  (default! headers (try (get opts 'headers) '()))
   (if head-cache
-      (meltcache/get head-cache s3head loc headers)
-      (s3head loc headers)))
+      (meltcache/get head-cache s3head loc opts headers)
+      (s3head loc opts headers)))
 
-(define (s3head loc headers)
-  (s3/op "HEAD" (s3loc-bucket loc) (s3loc-path loc) #[errs #f] "" ""
-	 headers))
+(define (s3head loc (opts #f) (headers))
+  (when (string? loc) (set! loc (->s3loc loc)))
+  (set! opts (opt+ opts (s3loc/opts loc)))
+  (default! headers (try (get opts 'headers) '()))
+  (s3/op "HEAD" (s3loc-bucket loc) (s3loc-path loc)
+    (cons #[errs #f] opts) 
+    "" "" headers))
 (config! 'meltpoint (cons 's3head 300))
 
 (config-def! 's3:headcache
@@ -586,12 +586,11 @@
 		      (error "Meltcache reloads not yet supported"))
 		     (else (set! head-cache (make-hashtable))))))
 
-(define (s3/get+ loc (text #t) (headers) (opts #f))
+(define (s3/get+ loc (opts #f) (text) (headers))
   (when (string? loc) (set! loc (->s3loc loc)))
-  (default! headers (try (get (s3loc/opts loc) 'headers) '()))
-  (if opts
-      (set! opts (cons opts (try (cons (s3loc/opts loc) s3opts)  s3opts)))
-      (set! opts (try (cons (s3loc/opts loc) s3opts)  s3opts)))
+  (set! opts (opt+ opts (s3loc/opts loc)))
+  (default! text (getopt opts 'text #t))
+  (default! headers (try (get opts 'headers) '()))
   (let* ((req (s3/op "GET" (s3loc-bucket loc) (s3loc-path loc)
 		opts "" "text" headers))
 	 (err (getopt opts 'errs (getopt opts 's3errs s3errs)))
@@ -621,36 +620,29 @@
 
 ;;; Basic S3 network metadata methods
 
-(define (s3/modtime loc (headers))
-  (when (string? loc) (set! loc (->s3loc loc)))
-  (default! headers (try (get (s3loc/opts loc) 'headers) '()))
-  (let ((info (s3/head loc headers)))
+(define (s3/modtime loc (opts #f))
+  (let ((info (s3/head loc opts)))
     (try (get info 'last-modified) #f)))
 
-(define (s3/exists? loc (headers))
-  (when (string? loc) (set! loc (->s3loc loc)))
-  (default! headers (try (get (s3loc/opts loc) 'headers) '()))
-  (let ((info (s3/head loc headers)))
+(define (s3/exists? loc (opts #f))
+  (let ((info (s3/head loc opts)))
     (response/ok? info)))
 
-(define (s3/etag loc (compute #f) (headers))
-  (when (string? loc) (set! loc (->s3loc loc)))
-  (default! headers (try (get (s3loc/opts loc) 'headers) '()))
-  (let ((req (s3/head loc headers)))
+(define (s3/etag loc (opts #f) (compute))
+  (default! compute (or (eq? opts #t) (getopt opts 'compute #f)))
+  (when (eq? opts #t) (set! opts #f))
+  (let ((req (s3/head loc opts)))
     (and (response/ok? req)
 	 (try (get req 'etag) (and compute (md5 (s3/content loc)))))))
 
-(define (s3/ctype loc)
-  (when (string? loc) (set! loc (->s3loc loc)))
-  (get (s3/head loc) 'content-type))
+(define (s3/ctype loc (opts #f))
+  (get (s3/head loc opts) 'content-type))
 
 (define etag-pat #((bos) {"" "\"" "&quot;"} (label hash (isxdigit+))))
 
-(define (s3/info loc (headers) (text #f) (opts #f))
-  (when (string? loc) (set! loc (->s3loc loc)))
-  (default! headers (try (get (s3loc/opts loc) 'headers)
-			 (getopt opts 'headers '())))
-  (let ((req (s3/head loc headers))
+(define (s3/info loc (opts #f) (istext))
+  (default! istext (getopt opts 'text #f))
+  (let ((req (s3/head loc opts))
 	(mimetable (getopt opts 'mimetable #f)))
     (debug%watch "S3LOC/INFO" loc req)
     (and (response/ok? req)
@@ -664,9 +656,9 @@
 	     'path (s3loc/s3uri loc)
 	     'content-type (try (get req 'content-type)
 				(path->mimetype (s3loc-path loc)
-						(if text "text" "application")
+						(if istext "text" "application")
 						mimetable)
-				(if text "text" "application"))
+				(if istext "text" "application"))
 	     'content-length (get req 'content-length)
 	     'content-encoding (get req 'content-encoding)
 	     'last-modified (try (get req 'last-modified) (timestamp))
@@ -1139,12 +1131,12 @@
 	      (tryif (exists? (textmatcher (cadr rule) (s3loc-path loc)))
 		(textsubst (s3loc-path loc) (cadr rule))))))))
 
-(define (s3/content loc (text #t) (headers '()) (opts #f))
+(define (s3/content loc (opts #f) (istext) (headers))
   (when (string? loc) (set! loc (->s3loc loc)))
-  (if opts
-      (set! opts (cons opts (try (cons (s3loc/opts loc) s3opts)  s3opts)))
-      (set! opts (try (cons (s3loc/opts loc) s3opts)  s3opts)))
-  (try (if text 
+  (set! opts (opt+ opts (s3loc/opts loc)))
+  (default! headers (try (get opts 'headers) '()))
+  (default! istext (getopt opts 'text #t))
+  (try (if istext 
 	   (filecontent (s3loc/filename loc))
 	   (filedata (s3loc/filename loc)))
        (let* ((req (s3/op "GET" (s3loc-bucket loc) (s3loc-path loc)
@@ -1237,11 +1229,24 @@
 	 (end (and start (position #\[ policy start))))
     (and end (1+ end))))
 
+;;; New GPATH definitions
+
+(define (s3loc:gpath:get ref (path #f) (aspect #f) (opts #f))
+  (cond ((eq? aspect 'exists?) 
+	 (s3/exists? (if path (s3/mkpath s3loc path) s3loc) opts))
+	((and path (eq? aspect 'content)) (s3/get (s3/mkpath ref path) #default opts))
+	((eq? aspect 'content) (s3/get ref #default opts))
+	((and aspect (not (overlaps? aspect 'content)))
+	 (s3/info (if path (s3/mkpath s3loc path) s3loc) opts #f))
+	(else (s3/get+ (if path (s3/mkpath s3loc path) s3loc)
+		       #default #f opts))))
+(kno/set-handler! 's3loc s3loc:gpath:get 'gpath:get)
+  
+  
 ;;;; GPATH definitions
 
 (define (gpath/info s3loc path opts) 
-  (s3/info (if path (s3/mkpath s3loc path) s3loc)
-	   #default #f opts))
+  (s3/info (if path (s3/mkpath s3loc path) s3loc) opts #f))
 (define (gpath/fetch s3loc path opts)
   (s3/get (if path (s3/mkpath s3loc path) s3loc) #default opts))
 (define (gpath/content s3loc path opts)
