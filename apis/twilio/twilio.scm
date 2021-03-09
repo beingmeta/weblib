@@ -115,7 +115,7 @@
 		  (stringout "+" cc "(" areacode ")" number)
 		  (stringout "+" cc " "
 		    (if (exists? areacode) (printout areacode " "))
-		    (textsubst number #{(spaces) "." "/" "-"} "")))))))
+		    (textsubst number '#{(spaces) "." "/" "-"} "")))))))
 (define (sms/norm string)
   (if (number? string)
       (sms/norm (stringout string))
