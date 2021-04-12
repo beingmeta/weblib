@@ -7,7 +7,7 @@
 
 (define %used_modules '{varconfig})
 
-(use-module '{kno/reflect domutils varconfig logger})
+(use-module '{reflection domutils varconfig logger})
 
 (module-export! '{dom/index! dom/indexer})
 

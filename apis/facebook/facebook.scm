@@ -6,7 +6,7 @@
 
 ;;; Basic access to facebook, including authorization
 
-(use-module '{webtools texttools kno/reflect varconfig logger})
+(use-module '{webtools texttools reflection varconfig logger})
 (use-module '{xhtml xhtml/auth apis/facebook/fbcall})
 
 (define-init %loglevel %notice%)

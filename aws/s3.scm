@@ -334,10 +334,10 @@
 			    (if (pair? opts) opts (list opts))
 			    '())))
   (cond ((not status)
-	 (newerr s3result (glom "S3/" op "/Failure") 'S3/OP
-		 op " " "s3://" bucket
-		 (if (has-prefix path "/") "" "/")
-		 path))
+	 (irritant s3result (glom "S3/" op "/Failure") 'S3/OP
+		   op " " "s3://" bucket
+		   (if (has-prefix path "/") "" "/")
+		   path))
 	((= status 404)
 	 (irritant s3result |S3/NotFound| S3/OP
 		   op " " "s3://" bucket
@@ -346,10 +346,10 @@
 	 (irritant s3result |S3/Forbidden| S3/OP
 		   op " " "s3://" bucket
 		   (if (has-prefix path "/") "" "/") path))
-	(else (newerr s3result (glom "S3/" op "/Failure") 'S3/OP
-		      op " " "s3://" bucket
-		      (if (has-prefix path "/") "" "/")
-		      path))))
+	(else (irritant s3result (glom "S3/" op "/Failure") 'S3/OP
+			op " " "s3://" bucket
+			(if (has-prefix path "/") "" "/")
+			path))))
 
 (define (s3-warn status irritant op bucket path opts)
   (let ((request (if (pair? irritant) (car irritant) irritant))

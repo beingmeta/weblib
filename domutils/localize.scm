@@ -6,7 +6,7 @@
 
 ;;; Utilites for manipulating parsed XML in terms of the XHTML DOM
 
-(use-module '{webtools texttools regex kno/reflect domutils aws/s3
+(use-module '{webtools texttools regex reflection domutils aws/s3
 	      varconfig gpath logger net/mimetable})
 
 (define-init %loglevel %notice%)

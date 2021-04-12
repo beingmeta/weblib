@@ -4,7 +4,7 @@
 
 (in-module 'net/checkurl)
 
-(use-module '{webtools curl xhtml kno/reflect binio texttools})
+(use-module '{webtools curl xhtml reflection binio texttools})
 (use-module '{varconfig text/stringfmts logger})
 (use-module '{apis/twilio aws/ses})
 (define %used_modules '{varconfig})

@@ -4,7 +4,7 @@
 
 (in-module 'net/oauth)
 
-(use-module '{webtools curl kno/reflect xhtml/auth varconfig opts})
+(use-module '{webtools curl reflection xhtml/auth varconfig opts})
 (use-module '{texttools logger})
 (define %used_modules '{varconfig xhtml/auth})
 (define %volatile '{getuser oauth-sessionfn})

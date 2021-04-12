@@ -9,7 +9,7 @@
 
 (define version "$Id$")
 
-(use-module '{webtools xhtml texttools kno/reflect})
+(use-module '{webtools xhtml texttools reflection})
 (use-module '{varconfig kno/rulesets logger})
 (use-module '{xhtml/auth xhtml/openid})
 

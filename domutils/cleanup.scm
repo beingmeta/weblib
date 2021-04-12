@@ -4,7 +4,7 @@
 
 (in-module 'domutils/cleanup)
 
-(use-module '{webtools xhtml texttools kno/reflect ezrecords logger varconfig
+(use-module '{webtools xhtml texttools reflection ezrecords logger varconfig
 	      domutils domutils/styles})
 
 (define-init %loglevel %warning%)

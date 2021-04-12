@@ -4,7 +4,7 @@
 
 (in-module 'apis/reddit)
 
-(use-module '{webtools texttools kno/reflect varconfig logger})
+(use-module '{webtools texttools reflection varconfig logger})
 (use-module '{net/oauth})
 
 (module-export! '{reddit/creds reddit.creds reddit.opts

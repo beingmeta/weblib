@@ -4,7 +4,7 @@
 
 (in-module 'domutils/adjust)
 
-(use-module '{kno/reflect webtools xhtml texttools domutils varconfig logger})
+(use-module '{reflection webtools xhtml texttools domutils varconfig logger})
 
 (module-export! '{dom/adjust! dom/edit! dom/parsedit})
 

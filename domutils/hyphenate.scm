@@ -4,7 +4,7 @@
 
 (in-module 'domutils/hyphenate)
 
-(use-module '{webtools xhtml texttools kno/reflect ezrecords logger varconfig
+(use-module '{webtools xhtml texttools reflection ezrecords logger varconfig
 	      domutils hyphenate})
 
 (module-export! '{dom/hyphenate!})

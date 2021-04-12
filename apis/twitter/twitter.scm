@@ -4,7 +4,7 @@
 
 (in-module 'apis/twitter)
 
-(use-module '{webtools texttools kno/reflect varconfig text/parsetime logger})
+(use-module '{webtools texttools reflection varconfig text/parsetime logger})
 (use-module '{xhtml xhtml/auth net/oauth kno/xconfig})
 
 (module-export! '{twitter/creds twitter/limits twitter-root})

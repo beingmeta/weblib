@@ -5,7 +5,7 @@
 
 (in-module 'xhtml/xtags)
 
-(use-module '{kno/reflect texttools})
+(use-module '{reflection texttools})
 (use-module '{xtags}) ;; brico brico/dterms
 (use-module '{webtools xhtml xhtml/clickit i18n xhtml/brico xhtml/beingmeta})
 

@@ -4,7 +4,7 @@
 
 (in-module 'domutils/css)
 
-(use-module '{kno/reflect texttools varconfig logger domutils gpath})
+(use-module '{reflection texttools varconfig logger domutils gpath})
 
 (define-init %loglevel %notice%)
 

@@ -4,7 +4,7 @@
 
 (in-module 'xhtml/brico)
 
-(use-module '{kno/reflect texttools})
+(use-module '{reflection texttools})
 (use-module '{webtools xhtml xhtml/clickit i18n})
 (use-module '{brico brico/dterms brico/analytics})
 
